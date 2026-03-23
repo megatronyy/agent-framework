@@ -76,7 +76,7 @@ async function main() {
     },
     systemPrompt: "You are a helpful code reviewer. Use tools when available.",
     tools: [...builtinTools, codeReviewTool],
-    skills: true, // Enable skills loading
+    enableSkills: true, // Enable skills loading
     personaPath: process.cwd(), // Load persona from current directory
   });
 

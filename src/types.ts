@@ -233,3 +233,119 @@ export interface AgentEvent {
  * Event listener
  */
 export type EventListener = (event: AgentEvent) => void;
+
+// ============================================================================
+// Subagent Types
+// ============================================================================
+
+/**
+ * Subagent configuration
+ */
+export interface SubagentConfig {
+  id: string;
+  name: string;
+  description: string;
+  agentConfig: AgentConfig;
+  allowedTools?: string[];
+  maxTurns?: number;
+  timeout?: number;
+  handoff?: {
+    keywords: string[];
+    targetSubagentId: string;
+  }[];
+}
+
+/**
+ * Subagent execution result
+ */
+export interface SubagentResult {
+  subagentId: string;
+  response: string;
+  toolExecutions: ToolExecution[];
+  usage?: TokenUsage;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Subagent handoff request
+ */
+export interface SubagentHandoff {
+  targetSubagentId: string;
+  reason: string;
+  context: Record<string, unknown>;
+}
+
+// ============================================================================
+// Context Engine Types
+// ============================================================================
+
+/**
+ * Context entry
+ */
+export interface ContextEntry {
+  id: string;
+  type: "message" | "memory" | "document" | "tool_result";
+  content: string;
+  metadata?: {
+    timestamp?: number;
+    source?: string;
+    relevance?: number;
+    tokens?: number;
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Context window config
+ */
+export interface ContextWindowConfig {
+  maxTokens: number;
+  reserveForResponse: number;
+  pruneStrategy: "oldest" | "least_relevant" | "summarize" | "smart";
+  summarizationProvider?: "anthropic" | "openai";
+}
+
+/**
+ * Context query options
+ */
+export interface ContextQueryOptions {
+  query?: string;
+  maxTokens?: number;
+  includeSystem?: boolean;
+  includeToolResults?: boolean;
+  relevanceThreshold?: number;
+}
+
+/**
+ * Context engine result
+ */
+export interface ContextEngineResult {
+  entries: ContextEntry[];
+  totalTokens: number;
+  remainingTokens: number;
+  wasPruned: boolean;
+  wasSummarized: boolean;
+}
+
+/**
+ * Context chunk for RAG
+ */
+export interface ContextChunk {
+  content: string;
+  metadata: {
+    source: string;
+    score: number;
+    timestamp?: number;
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Vector store interface for RAG
+ */
+export interface VectorStore {
+  add(documents: Array<{ id: string; content: string; metadata?: Record<string, unknown> }>): Promise<void>;
+  search(query: string, topK?: number): Promise<ContextChunk[]>;
+  delete(id: string): Promise<void>;
+  clear(): Promise<void>;
+}

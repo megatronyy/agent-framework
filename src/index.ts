@@ -35,6 +35,18 @@ export * from "./skills/Skill.js";
 export { PersonaLoader } from "./persona/PersonaLoader.js";
 export * from "./persona/Persona.js";
 
+// Subagent
+export { SubagentRegistry, SubagentExecutor, createSubagentTool, createHandoffTool } from "./subagent/index.js";
+
+// Context Engine
+export {
+  ContextEngine,
+  SimpleTokenCounter,
+  SimpleContextSummarizer,
+  InMemoryVectorStore,
+  createRAGTool,
+} from "./context/index.js";
+
 // Types
 export * from "./types.js";
 import type { AgentConfig } from "./types.js";
