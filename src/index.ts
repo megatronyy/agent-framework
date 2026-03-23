@@ -18,6 +18,13 @@ export { MemorySessionManager } from "./session/MemorySessionManager.js";
 // Tools
 export { MemoryToolRegistry } from "./tools/MemoryToolRegistry.js";
 export { builtinTools, calculatorTool, dateTimeTool, memoryTool } from "./tools/builtins/index.js";
+export { extendedTools, allTools } from "./tools/index.js";
+export { webFetchTool } from "./tools/web/web-fetch.js";
+export { webSearchTool } from "./tools/web/web-search.js";
+export { fileReadTool, fileWriteTool, fileListTool } from "./tools/file/file-tool.js";
+export { pdfTool } from "./tools/pdf/pdf-tool.js";
+export { cronTool } from "./tools/cron/cron-tool.js";
+export { codeExecuteTool } from "./tools/code/code-tool.js";
 
 // Skills
 export { SkillRegistry } from "./skills/SkillRegistry.js";
