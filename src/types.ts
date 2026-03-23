@@ -104,6 +104,9 @@ export interface AgentConfig {
   temperature?: number;
   maxTokens?: number;
   metadata?: Record<string, unknown>;
+  skillsPaths?: string[];
+  enableSkills?: boolean;
+  personaPath?: string;
 }
 
 /**

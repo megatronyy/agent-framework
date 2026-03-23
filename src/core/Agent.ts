@@ -19,21 +19,34 @@ import { AnthropicProvider } from "./providers/AnthropicProvider.js";
 import { OpenAIProvider } from "./providers/OpenAIProvider.js";
 import { MemorySessionManager } from "../session/MemorySessionManager.js";
 import { MemoryToolRegistry } from "../tools/MemoryToolRegistry.js";
+import { SkillRegistry } from "../skills/SkillRegistry.js";
+import { PersonaLoader } from "../persona/PersonaLoader.js";
 
 export class Agent {
   private config: AgentConfig;
   private sessionManager: MemorySessionManager;
   private toolRegistry: MemoryToolRegistry;
+  private skillRegistry: SkillRegistry;
+  private personaLoader: PersonaLoader;
   private provider: AgentProvider;
   private eventListeners: Set<EventListener>;
   private activeRuns: Map<string, AbortController>;
+  private personaPrompt: string;
+  private skillsPrompt: string;
 
   constructor(config: AgentConfig) {
     this.config = config;
     this.sessionManager = new MemorySessionManager();
     this.toolRegistry = new MemoryToolRegistry();
+    this.skillRegistry = new SkillRegistry({
+      skillPaths: config.skillsPaths,
+      includeDisabled: false,
+    });
+    this.personaLoader = new PersonaLoader(config.personaPath || process.cwd());
     this.eventListeners = new Set();
     this.activeRuns = new Map();
+    this.personaPrompt = "";
+    this.skillsPrompt = "";
 
     // Register agent tools
     if (config.tools) {
@@ -44,6 +57,34 @@ export class Agent {
 
     // Initialize provider
     this.provider = this.createProvider(config.model);
+
+    // Load skills and persona
+    this.initializePersonaAndSkills();
+  }
+
+  /**
+   * Initialize persona and skills prompts
+   */
+  private async initializePersonaAndSkills(): Promise<void> {
+    // Load persona
+    if (this.config.enableSkills !== false) {
+      try {
+        const persona = await this.personaLoader.load();
+        this.personaPrompt = this.personaLoader.buildSystemPrompt(persona);
+      } catch {
+        // Persona loading is optional
+      }
+    }
+
+    // Load skills
+    if (this.config.enableSkills !== false) {
+      try {
+        await this.skillRegistry.load();
+        this.skillsPrompt = this.skillRegistry.buildPrompt();
+      } catch {
+        // Skills loading is optional
+      }
+    }
   }
 
   /**
@@ -299,11 +340,26 @@ export class Agent {
   private prepareMessages(session: Session): Message[] {
     const messages: Message[] = [];
 
-    // Add system prompt
+    // Build enhanced system prompt with persona and skills
+    const systemParts: string[] = [];
+
     if (this.config.systemPrompt) {
+      systemParts.push(this.config.systemPrompt);
+    }
+
+    if (this.personaPrompt) {
+      systemParts.push(this.personaPrompt);
+    }
+
+    if (this.skillsPrompt) {
+      systemParts.push(this.skillsPrompt);
+    }
+
+    // Add combined system prompt
+    if (systemParts.length > 0) {
       messages.push({
         role: "system",
-        content: this.config.systemPrompt,
+        content: systemParts.join("\n\n"),
       });
     }
 
@@ -384,6 +440,28 @@ export class Agent {
    */
   getToolRegistry(): MemoryToolRegistry {
     return this.toolRegistry;
+  }
+
+  /**
+   * Get skill registry
+   */
+  getSkillRegistry(): SkillRegistry {
+    return this.skillRegistry;
+  }
+
+  /**
+   * Get persona loader
+   */
+  getPersonaLoader(): PersonaLoader {
+    return this.personaLoader;
+  }
+
+  /**
+   * Reload skills
+   */
+  async reloadSkills(): Promise<void> {
+    await this.skillRegistry.load();
+    this.skillsPrompt = this.skillRegistry.buildPrompt();
   }
 
   /**

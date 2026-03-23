@@ -19,6 +19,15 @@ export { MemorySessionManager } from "./session/MemorySessionManager.js";
 export { MemoryToolRegistry } from "./tools/MemoryToolRegistry.js";
 export { builtinTools, calculatorTool, dateTimeTool, memoryTool } from "./tools/builtins/index.js";
 
+// Skills
+export { SkillRegistry } from "./skills/SkillRegistry.js";
+export { parseSkill, buildSkillsPrompt } from "./skills/SkillParser.js";
+export * from "./skills/Skill.js";
+
+// Persona
+export { PersonaLoader } from "./persona/PersonaLoader.js";
+export * from "./persona/Persona.js";
+
 // Types
 export * from "./types.js";
 import type { AgentConfig } from "./types.js";
@@ -38,6 +47,7 @@ export function createTextAgent(options: {
   model?: string;
   provider?: "anthropic" | "openai";
   systemPrompt?: string;
+  skills?: boolean;
 }): Agent {
   return createAgent({
     id: "default-agent",
@@ -49,5 +59,6 @@ export function createTextAgent(options: {
     },
     systemPrompt: options.systemPrompt,
     tools: [],
+    enableSkills: options.skills ?? true,
   });
 }
