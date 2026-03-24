@@ -36,7 +36,25 @@ export { PersonaLoader } from "./persona/PersonaLoader.js";
 export * from "./persona/Persona.js";
 
 // Subagent
-export { SubagentRegistry, SubagentExecutor, createSubagentTool, createHandoffTool } from "./subagent/index.js";
+export {
+  SubagentRegistry,
+  SubagentExecutor,
+  HandoffManager,
+  createSubagentTool,
+  createSubagentTools,
+  createHandoffTool,
+  createDirectedHandoffTool,
+} from "./subagent/index.js";
+export type {
+  SubagentMetadata,
+  SubagentRegistryConfig,
+  SubagentExecutionOptions,
+  SubagentExecutionResult,
+  HandoffContext,
+  HandoffResult,
+  HandoffStrategy,
+  HandoffConfig,
+} from "./subagent/index.js";
 
 // Context Engine
 export {
@@ -46,6 +64,15 @@ export {
   InMemoryVectorStore,
   createRAGTool,
 } from "./context/index.js";
+
+// Errors
+export * from "./errors/index.js";
+
+// Validation
+export * from "./validation/index.js";
+
+// Audit
+export * from "./audit/index.js";
 
 // Types
 export * from "./types.js";
