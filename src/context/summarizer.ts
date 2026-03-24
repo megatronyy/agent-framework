@@ -5,7 +5,7 @@
  */
 
 import type { Message } from "./token-counter.js";
-import type { TokenCounter } from "./token-counter.js";
+import { SimpleTokenCounter } from "./token-counter.js";
 
 /**
  * Summary section
@@ -49,9 +49,9 @@ const defaultOptions: Required<SummarizerOptions> = {
  */
 export class SimpleContextSummarizer {
   private options: Required<SummarizerOptions>;
-  private tokenCounter?: TokenCounter;
+  private tokenCounter?: SimpleTokenCounter;
 
-  constructor(options?: SummarizerOptions, tokenCounter?: TokenCounter) {
+  constructor(options?: SummarizerOptions, tokenCounter?: SimpleTokenCounter) {
     this.options = { ...defaultOptions, ...options };
     this.tokenCounter = tokenCounter;
   }

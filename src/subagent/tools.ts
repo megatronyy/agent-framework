@@ -39,10 +39,7 @@ export function createSubagentTool(
       },
       required: ["input"],
     },
-    handler: async ({ input, context }) => {
-      const agentId = context.agentId;
-      const sessionId = context.sessionId;
-
+    handler: async ({ input }) => {
       try {
         const result = await executor.execute(subagent, input.input as string, {
           timeout: input.timeout as number,
@@ -105,7 +102,7 @@ export function createSubagentTools(
 export function createHandoffTool(
   registry: SubagentRegistry,
   handoffManager: HandoffManager,
-  config?: Partial<HandoffConfig>
+  _config?: Partial<HandoffConfig>
 ): Tool {
   // Get available target agents
   const targetAgents = registry.listMetadata();
@@ -140,8 +137,7 @@ export function createHandoffTool(
       required: ["targetAgent"],
     },
     handler: async ({ input, context }) => {
-      const agentId = context.agentId;
-      const sessionId = context.sessionId;
+      const { agentId } = context;
 
       try {
         const targetSubagent = registry.get(input.targetAgent as string);

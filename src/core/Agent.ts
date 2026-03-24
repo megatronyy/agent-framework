@@ -17,6 +17,7 @@ import type {
 } from "../types.js";
 import { AnthropicProvider } from "./providers/AnthropicProvider.js";
 import { OpenAIProvider } from "./providers/OpenAIProvider.js";
+import { ZhipuProvider } from "./providers/ZhipuProvider.js";
 import { MemorySessionManager } from "../session/MemorySessionManager.js";
 import { MemoryToolRegistry } from "../tools/MemoryToolRegistry.js";
 import { SkillRegistry } from "../skills/SkillRegistry.js";
@@ -97,6 +98,8 @@ export class Agent {
       case "openai":
       case "openrouter":
         return new OpenAIProvider(modelConfig);
+      case "zhipu":
+        return new ZhipuProvider(modelConfig);
       default:
         throw new Error(`Unsupported provider: ${modelConfig.provider}`);
     }
@@ -469,6 +472,20 @@ export class Agent {
    */
   getConfig(): AgentConfig {
     return { ...this.config };
+  }
+
+  /**
+   * Get agent ID
+   */
+  get id(): string {
+    return this.config.id;
+  }
+
+  /**
+   * Get agent name
+   */
+  get name(): string {
+    return this.config.name;
   }
 
   /**

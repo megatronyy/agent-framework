@@ -196,7 +196,7 @@ User input: ${input}`;
   /**
    * Run the agent (placeholder for actual agent execution)
    */
-  private async runAgent(agent: Agent, context: string): Promise<string> {
+  private async runAgent(agent: Agent, _context: string): Promise<string> {
     // This is a simplified implementation
     // The actual implementation would call agent.processMessage() or similar
     return `[Agent execution for ${agent.id}]`;

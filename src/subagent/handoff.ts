@@ -77,8 +77,8 @@ export class HandoffManager {
   ): Promise<HandoffResult> {
     const opts = { ...defaultHandoffConfig, ...config };
 
-    const fromId = "id" in fromAgent ? fromAgent.id : fromAgent.agent.id;
-    const toId = "id" in toAgent ? toAgent.id : toAgent.agent.id;
+    const fromId = "agent" in fromAgent ? fromAgent.agent.id : fromAgent.id;
+    const toId = "agent" in toAgent ? toAgent.agent.id : toAgent.id;
 
     // Prepare context
     const context: HandoffContext = {
@@ -247,8 +247,8 @@ export class HandoffManager {
     fromAgent: Agent | SubagentMetadata,
     toAgent: Agent | SubagentMetadata
   ): string {
-    const fromName = "id" in fromAgent ? fromAgent.name : fromAgent.agent.name;
-    const toName = "id" in toAgent ? toAgent.name : toAgent.agent.name;
+    const fromName = "agent" in fromAgent ? fromAgent.agent.name : fromAgent.name;
+    const toName = "agent" in toAgent ? toAgent.agent.name : toAgent.name;
 
     return `Transferring from ${fromName} to ${toName} for specialized handling`;
   }
@@ -256,7 +256,7 @@ export class HandoffManager {
   /**
    * Evaluate if handoff conditions are met
    */
-  private evaluateHandoffConditions(context: HandoffContext): boolean {
+  private evaluateHandoffConditions(_context: HandoffContext): boolean {
     // For now, always return true
     // In a real implementation, this would check various conditions
     return true;

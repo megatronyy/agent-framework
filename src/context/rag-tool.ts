@@ -6,7 +6,6 @@
 
 import type { Tool } from "../types.js";
 import type { InMemoryVectorStore } from "./vector-store.js";
-import type { Message } from "./token-counter.js";
 
 /**
  * RAG tool options
@@ -55,7 +54,7 @@ export function createRAGTool(
       },
       required: ["query"],
     },
-    handler: async ({ input, context }) => {
+    handler: async ({ input }) => {
       try {
         const results = await vectorStore.search(input.query as string, {
           limit: input.limit as number ?? opts.maxResults,
@@ -134,7 +133,7 @@ export function createRAGContextTool(
  */
 export function createDocumentLookupTool(
   vectorStore: InMemoryVectorStore,
-  options?: RAGToolOptions
+  _options?: RAGToolOptions
 ): Tool {
   return {
     name: "lookup_document",

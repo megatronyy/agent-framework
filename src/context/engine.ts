@@ -8,7 +8,6 @@ import { SimpleTokenCounter } from "./token-counter.js";
 import { SimpleContextSummarizer } from "./summarizer.js";
 import { InMemoryVectorStore } from "./vector-store.js";
 import type { Message, TokenCount } from "./token-counter.js";
-import type { SummaryResult } from "./summarizer.js";
 import type { VectorDocument } from "./vector-store.js";
 
 /**
