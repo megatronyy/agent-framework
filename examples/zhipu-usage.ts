@@ -30,6 +30,18 @@ const simpleAgent = createTextAgent({
 
 // Example 3: Run the agent
 async function main() {
+  // Check for API key
+  if (!process.env.ZHIPUAI_API_KEY) {
+    console.error("Error: ZHIPUAI_API_KEY environment variable is not set.");
+    console.error("\nPlease set your Zhipu AI API key:");
+    console.error("  export ZHIPUAI_API_KEY='your-api-key-here'");
+    console.error("\nOr get one from: https://open.bigmodel.cn/");
+    process.exit(1);
+  }
+
+  console.log("Running Zhipu AI agent...");
+  console.log("Model: glm-4-flash\n");
+
   const result = await simpleAgent.run({
     message: "你好，请介绍一下智谱AI的GLM模型。",
     onProgress: (token) => process.stdout.write(token),
@@ -47,5 +59,8 @@ async function main() {
 // - glm-4-long: Long context model (128K tokens)
 // - glm-4.7: Latest generation model
 // - glm-5: Next-generation flagship model
+
+// Run the example
+main().catch(console.error);
 
 export { agent, simpleAgent };
