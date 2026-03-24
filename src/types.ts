@@ -5,7 +5,7 @@
 /**
  * Supported model providers
  */
-export type ModelProvider = "anthropic" | "openai" | "openrouter" | "ollama";
+export type ModelProvider = "anthropic" | "openai" | "openrouter" | "ollama" | "zhipu";
 
 /**
  * Message role in the conversation

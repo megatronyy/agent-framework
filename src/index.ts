@@ -11,6 +11,7 @@ import { Agent } from "./core/Agent.js";
 export { Agent } from "./core/Agent.js";
 export { AnthropicProvider } from "./core/providers/AnthropicProvider.js";
 export { OpenAIProvider } from "./core/providers/OpenAIProvider.js";
+export { ZhipuProvider } from "./core/providers/ZhipuProvider.js";
 
 // Session management
 export { MemorySessionManager } from "./session/MemorySessionManager.js";
@@ -91,16 +92,23 @@ export function createAgent(config: AgentConfig): Agent {
 export function createTextAgent(options: {
   apiKey: string;
   model?: string;
-  provider?: "anthropic" | "openai";
+  provider?: "anthropic" | "openai" | "zhipu";
   systemPrompt?: string;
   skills?: boolean;
 }): Agent {
+  const provider = options.provider || "anthropic";
+  const defaultModel = provider === "zhipu"
+    ? "glm-4-flash"
+    : provider === "openai"
+    ? "gpt-4o-mini"
+    : "claude-3-5-sonnet-20241022";
+
   return createAgent({
     id: "default-agent",
     name: "Default Agent",
     model: {
-      provider: options.provider || "anthropic",
-      model: options.model || "claude-3-5-sonnet-20241022",
+      provider,
+      model: options.model || defaultModel,
       apiKey: options.apiKey,
     },
     systemPrompt: options.systemPrompt,
